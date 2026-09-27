@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SentimentAI — read between the lines</title>
+<meta name="description" content="Paste any text and watch an LSTM neural network read its emotional tone in real time." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="page">
+
+  <!-- LEFT: manifesto / intro column -->
+  <aside class="intro">
+    <div class="intro-inner">
+      <p class="kicker">Text sentiment, read live</p>
+      <h1 class="wordmark">Sentiment<em>AI</em></h1>
+      <p class="lede">
+        Type a sentence. An embedding layer turns each word into a vector,
+        a bidirectional LSTM reads the sequence, and a linear layer decides
+        how it feels — negative, neutral, or positive.
+      </p>
+
+      <ol class="pipeline" aria-label="How it works">
+        <li>
+          <span class="pipeline-mark">1</span>
+          <div>
+            <h3>Clean &amp; tokenize</h3>
+            <p>Lowercased, stripped of noise, split into word tokens and stemmed to their root form.</p>
+          </div>
+        </li>
+        <li>
+          <span class="pipeline-mark">2</span>
+          <div>
+            <h3>Embed &amp; encode</h3>
+            <p>Each token becomes a dense vector; a bidirectional LSTM tracks how the meaning unfolds.</p>
+          </div>
+        </li>
+        <li>
+          <span class="pipeline-mark">3</span>
+          <div>
+            <h3>Classify</h3>
+            <p>A linear layer scores three classes and softmax turns the scores into a confidence.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="stat-strip" id="statStrip" aria-label="Model performance">
+        <div class="stat">
+          <span class="stat-value" id="statAcc">—</span>
+          <span class="stat-label">validation accuracy</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="statF1">—</span>
+          <span class="stat-label">macro F1-score</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="statVocab">—</span>
+          <span class="stat-label">vocabulary size</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: the interactive analyzer -->
+  <main class="analyzer">
+    <div class="analyzer-card">
+
+      <label for="textInput" class="field-label">Your text</label>
+      <textarea
+        id="textInput"
+        placeholder="Type or paste anything — a review, a tweet, a note to yourself…"
+        maxlength="2000"
+        rows="6"
+      ></textarea>
+
+      <div class="field-row">
+        <span class="char-count"><span id="charCount">0</span> / 2000</span>
+        <div class="examples">
+          <span>Try:</span>
+          <button type="button" class="example-chip" data-text="Honestly the best customer support I've ever dealt with, they fixed it in minutes.">a rave review</button>
+          <button type="button" class="example-chip" data-text="The app crashed twice today and support never replied to my email.">a complaint</button>
+          <button type="button" class="example-chip" data-text="The train departs platform 4 at 9:15 and arrives around noon.">a plain fact</button>
+        </div>
+      </div>
+
+      <button type="button" id="analyzeBtn" class="analyze-btn">
+        <span class="btn-label">Analyze sentiment</span>
+        <span class="btn-spinner" aria-hidden="true"></span>
+      </button>
+
+      <p id="errorMsg" class="error-msg" role="alert" hidden></p>
+
+      <section id="result" class="result" hidden aria-live="polite">
+        <div class="result-top">
+          <div class="result-emoji" id="resultEmoji">🙂</div>
+          <div class="result-heading">
+            <span class="result-label" id="resultLabel">Positive</span>
+            <span class="result-confidence"><span id="resultConfidence">0</span>% confident</span>
+          </div>
+        </div>
+
+        <div class="spectrum" id="spectrum" aria-label="Sentiment breakdown">
+          <div class="spectrum-bar">
+            <div class="spectrum-seg neg" id="segNeg" style="width:0%"></div>
+            <div class="spectrum-seg neu" id="segNeu" style="width:0%"></div>
+            <div class="spectrum-seg pos" id="segPos" style="width:0%"></div>
+          </div>
+          <div class="spectrum-legend">
+            <span class="legend-item neg">Negative <b id="pctNeg">0%</b></span>
+            <span class="legend-item neu">Neutral <b id="pctNeu">0%</b></span>
+            <span class="legend-item pos">Positive <b id="pctPos">0%</b></span>
+          </div>
+        </div>
+
+        <div class="tokens-row">
+          <span class="tokens-label">Model saw these tokens:</span>
+          <div class="tokens" id="tokensList"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <p class="footnote">Runs on a PyTorch LSTM served through a small Flask API — no data leaves your server.</p>
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
