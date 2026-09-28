@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090d1b" />
+  <meta name="description" content="Analyze text instantly and discover whether its sentiment is positive, negative, or neutral." />
+  <title>SentimentAI — AI-Powered Sentiment Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="SentimentAI home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M6 21.5 12.1 15l4.4 4.2L26 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M20.5 9H26v5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-name">Sentiment<span>AI</span></span>
+        <span class="brand-caption">AI-Powered Sentiment Analysis</span>
+      </span>
+    </a>
+    <div class="model-status" id="modelStatus" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="modelStatusText">Checking model...</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+      <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow"><span class="eyebrow-line"></span>AI-POWERED NLP</p>
+        <h1 id="heroTitle">Understand the emotion<br class="desktop-break" /> behind every <span>word.</span></h1>
+        <p class="hero-description">Analyze text instantly and discover whether its sentiment is Positive, Negative, or Neutral.</p>
+      </div>
+      <div class="hero-signal" aria-hidden="true">
+        <span class="signal-point"></span>
+        <span class="signal-line"></span>
+        <span class="signal-point signal-point-last"></span>
+      </div>
+    </section>
+
+    <section class="analyzer-section" aria-labelledby="analyzerTitle">
+      <div class="analyzer-card">
+        <div class="card-heading">
+          <div class="heading-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 6.5h16M4 12h10M4 17.5h13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              <circle cx="18" cy="12" r="2" stroke="currentColor" stroke-width="1.7" />
+            </svg>
+          </div>
+          <div>
+            <h2 id="analyzerTitle">Analyze Your Text</h2>
+            <p>Enter any sentence, review, or message to analyze its sentiment.</p>
+          </div>
+        </div>
+
+        <form id="analyzerForm" novalidate>
+          <label for="textInput" class="field-label">Your text</label>
+          <textarea
+            id="textInput"
+            name="text"
+            placeholder="Type or paste your text here..."
+            maxlength="2000"
+            rows="5"
+            aria-describedby="charCountHint"
+            required
+          ></textarea>
+          <div class="field-meta">
+            <span class="char-count" id="charCountHint"><span id="charCount">0</span> / 2000 characters</span>
+            <button type="button" id="clearBtn" class="text-button" aria-label="Clear text">Clear text</button>
+          </div>
+
+          <div class="examples">
+            <span class="examples-label">Try an example</span>
+            <div class="example-list">
+              <button type="button" class="example-chip" data-text="I absolutely love this product!">
+                <span class="chip-dot positive-dot" aria-hidden="true"></span>Positive
+              </button>
+              <button type="button" class="example-chip" data-text="This product was disappointing.">
+                <span class="chip-dot negative-dot" aria-hidden="true"></span>Negative
+              </button>
+              <button type="button" class="example-chip" data-text="The package arrived today.">
+                <span class="chip-dot neutral-dot" aria-hidden="true"></span>Neutral
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="analyzeBtn" class="analyze-btn">
+            <span class="btn-label">Analyze Sentiment</span>
+            <svg class="btn-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4.5 10h11m-4.5-4.5L15.5 10 11 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <p id="errorMsg" class="error-msg" role="alert" hidden></p>
+
+        <section id="result" class="result" hidden aria-live="polite" aria-labelledby="resultTitle">
+          <div class="result-header">
+            <div>
+              <p class="result-kicker">YOUR TEXT, DECODED</p>
+              <h2 id="resultTitle">Analysis Result</h2>
+            </div>
+            <span class="result-badge">AI prediction</span>
+          </div>
+
+          <div class="result-summary">
+            <div class="result-emoji" id="resultEmoji" aria-hidden="true">🙂</div>
+            <div class="result-heading">
+              <span class="result-label" id="resultLabel">Positive</span>
+              <span class="result-confidence"><span id="resultConfidence">0.00</span>% confidence</span>
+            </div>
+          </div>
+
+          <div class="confidence-wrap">
+            <div class="bar-caption">
+              <span>Prediction confidence</span>
+              <span id="confidenceValue">0.00%</span>
+            </div>
+            <div class="confidence-track" role="progressbar" id="confidenceTrack" aria-label="Prediction confidence" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+          </div>
+
+          <div class="probabilities">
+            <h3>Probability Breakdown</h3>
+            <div class="probability-row">
+              <div class="probability-caption"><span class="probability-name"><span class="probability-dot negative-dot"></span>Negative</span><span class="probability-value" id="pctNeg">0.00%</span></div>
+              <div class="probability-track" role="progressbar" aria-label="Negative probability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="probability-fill negative-fill" id="barNeg"></div></div>
+            </div>
+            <div class="probability-row">
+              <div class="probability-caption"><span class="probability-name"><span class="probability-dot neutral-dot"></span>Neutral</span><span class="probability-value" id="pctNeu">0.00%</span></div>
+              <div class="probability-track" role="progressbar" aria-label="Neutral probability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="probability-fill neutral-fill" id="barNeu"></div></div>
+            </div>
+            <div class="probability-row">
+              <div class="probability-caption"><span class="probability-name"><span class="probability-dot positive-dot"></span>Positive</span><span class="probability-value" id="pctPos">0.00%</span></div>
+              <div class="probability-track" role="progressbar" aria-label="Positive probability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="probability-fill positive-fill" id="barPos"></div></div>
+            </div>
+          </div>
+
+          <div id="tokensSection" class="tokens-section" hidden>
+            <h3>Processed Tokens</h3>
+            <div class="tokens" id="tokensList"></div>
+          </div>
+          <p id="resultNote" class="result-note" hidden></p>
+        </section>
+      </div>
+
+      <p class="privacy-note">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 7V5.2a3.5 3.5 0 0 1 7 0V7m-8.2 0h9.4v6.2H3.3V7Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        Your text is analyzed by the project model and is not stored by this interface.
+      </p>
+    </section>
+
+    <section class="how-section" aria-labelledby="howTitle">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="eyebrow-line"></span>THE PROCESS</p>
+        <h2 id="howTitle">How it works</h2>
+        <p>Three steps from raw text to meaningful insight.</p>
+      </div>
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-number">01</span>
+          <div class="step-icon" aria-hidden="true">Aa</div>
+          <h3>Enter Text</h3>
+          <p>Share a sentence, review, or message you want to understand.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">02</span>
+          <div class="step-icon step-icon-spark" aria-hidden="true">✳</div>
+          <h3>AI Analysis</h3>
+          <p>The NLP model processes the words and evaluates their sentiment.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">03</span>
+          <div class="step-icon step-icon-result" aria-hidden="true">↗</div>
+          <h3>Sentiment Result</h3>
+          <p>Review the predicted emotion alongside confidence and probabilities.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="technology-section" aria-label="Technologies">
+      <span class="technology-label">BUILT WITH</span>
+      <div class="technology-list">
+        <span class="technology-tag"><span class="technology-mark torch-mark">P</span>PyTorch</span>
+        <span class="technology-tag"><span class="technology-mark model-mark">↔</span>BiLSTM</span>
+        <span class="technology-tag"><span class="technology-mark flask-mark">F</span>Flask</span>
+        <span class="technology-tag"><span class="technology-mark nlp-mark">N</span>NLP</span>
+      </div>
+      <div class="model-metrics" aria-label="Model metrics">
+        <span><b id="statAcc">—</b> validation accuracy</span>
+        <span><b id="statF1">—</b> macro F1-score</span>
+        <span><b id="statVocab">—</b> vocabulary size</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-brand" href="#" aria-label="SentimentAI home">Sentiment<span>AI</span></a>
+    <p>SentimentAI <span aria-hidden="true">•</span> AI-powered text sentiment analysis</p>
+    <span class="footer-caption">Made for language understanding</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
